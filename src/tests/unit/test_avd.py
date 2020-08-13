@@ -18,7 +18,7 @@ class TestAvd(TestCase):
     def test_nexus_avd_as_default(self, mocked_suprocess, mocked_open):
         self.assertFalse(mocked_suprocess.called)
         self.assertFalse(mocked_open.called)
-        app.prepare_avd('Nexus 5', self.avd_name, '550m')
+        app.prepare_avd('TV 1080p', self.avd_name, '550m')
         self.assertTrue(mocked_suprocess.called)
         self.assertTrue(mocked_open.called)
 

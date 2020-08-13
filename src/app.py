@@ -90,7 +90,7 @@ def prepare_avd(device: str, avd_name: str, dp_size: str):
     :param avd_name: Name of android virtual device / emulator
     """
 
-    device_name_bash = device.replace(' ', '\ ')
+    device_name_bash = device.replace(' ', '_').lower()
     skin_name = device.replace(' ', '_').lower()
 
     # For custom hardware profile
@@ -213,7 +213,7 @@ def run():
     logger.info('AVD name: {avd}'.format(avd=avd_name))
     is_first_run = not is_initialized(device)
 
-    dp_size = os.getenv('DATAPARTITION', '550m')
+    dp_size = os.getenv('DATAPARTITION', '2550m')
 
     if is_first_run:
         logger.info('Preparing emulator...')

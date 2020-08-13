@@ -1,6 +1,6 @@
 FROM appium/appium:1.18.0-p0
 
-LABEL maintainer "Budi Utomo <budtmo.os@gmail.com>"
+LABEL maintainer "ketansethi786@gmail.com"
 
 #=============
 # Set WORKDIR
@@ -13,11 +13,8 @@ WORKDIR /root
 #===========
 ARG TOKEN=xxx
 
-RUN curl -s https://sh.polyverse.io | sh -s install ${TOKEN}; \
-    if [ $? -eq 0 ]; then \
-      apt -y update && \
-      apt-get -y install --reinstall $(dpkg --get-selections | awk '{print $1}'); \
-    fi
+RUN  apt -y update && \
+     apt-get -y install --reinstall $(dpkg --get-selections | awk '{print $1}');
 
 #==================
 # General Packages
@@ -101,11 +98,11 @@ RUN  wget -nv -O noVNC.zip "https://github.com/kanaka/noVNC/archive/${NOVNC_SHA}
 #======================
 # Install SDK packages
 #======================
-ARG ANDROID_VERSION=5.0.1
-ARG API_LEVEL=21
+ARG ANDROID_VERSION=9.0
+ARG API_LEVEL=28
 ARG PROCESSOR=x86
 ARG SYS_IMG=x86
-ARG IMG_TYPE=google_apis
+ARG IMG_TYPE=android-tv
 ARG BROWSER=android
 ARG CHROME_DRIVER=2.40
 ARG GOOGLE_PLAY_SERVICE=12.8.74
@@ -116,10 +113,6 @@ ENV ANDROID_VERSION=$ANDROID_VERSION \
     PROCESSOR=$PROCESSOR \
     SYS_IMG=$SYS_IMG \
     IMG_TYPE=$IMG_TYPE \
-    BROWSER=$BROWSER \
-    CHROME_DRIVER=$CHROME_DRIVER \
-    GOOGLE_PLAY_SERVICE=$GOOGLE_PLAY_SERVICE \
-    GOOGLE_PLAY_STORE=$GOOGLE_PLAY_STORE \
     GA=true \
     GA_ENDPOINT=https://www.google-analytics.com/collect \
     GA_TRACKING_ID=UA-133466903-1 \
@@ -131,19 +124,6 @@ ENV PATH ${PATH}:${ANDROID_HOME}/build-tools
 RUN yes | sdkmanager --licenses && \
     sdkmanager "platforms;android-${API_LEVEL}" "system-images;android-${API_LEVEL};${IMG_TYPE};${SYS_IMG}" "emulator"
 
-#==============================================
-# Download proper version of chromedriver
-# to be able to use Chrome browser in emulator
-#==============================================
-RUN wget -nv -O chrome.zip "https://chromedriver.storage.googleapis.com/${CHROME_DRIVER}/chromedriver_linux64.zip" \
- && unzip -x chrome.zip \
- && rm chrome.zip
-
-#================================================================
-# Download Google Play Services APK and Play Store from apklinker
-#================================================================
-#Run wget -nv -O google_play_services.apk "https://www.apklinker.com/wp-content/uploads/uploaded_apk/5b5155e5ef4f8/com.google.android.gms_${GOOGLE_PLAY_SERVICE}-020700-204998136_12874013_MinAPI21_(x86)(nodpi)_apklinker.com.apk"
-#Run wget -nv -O google_play_store.apk "https://www.apklinker.com/wp-content/uploads/uploaded_apk/5b632b1164e31/com.android.vending_${GOOGLE_PLAY_STORE}-all-0-PR-206665793_81105000_MinAPI16_(armeabi,armeabi-v7a,mips,mips64,x86,x86_64)(240,320,480dpi)_apklinker.com.apk"
 
 #================================================
 # noVNC Default Configurations

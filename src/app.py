@@ -228,6 +228,7 @@ def run():
         logger.info('Using previously initialized AVD...')
         cmd = 'emulator/emulator @{name} -gpu swiftshader_indirect -accel on -verbose -writable-system {custom_args}'.format(name=avd_name, custom_args=custom_args)
 
+
     appium = convert_str_to_bool(str(os.getenv('APPIUM', False)))
     if appium:
         subprocess.Popen(cmd.split())
@@ -235,7 +236,6 @@ def run():
         appium_run(avd_name)
     else:
         result = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE).communicate()
-
 
 if __name__ == '__main__':
     run()

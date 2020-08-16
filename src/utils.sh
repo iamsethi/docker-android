@@ -68,8 +68,26 @@ function enable_proxy_if_needed () {
   fi
 }
 
+
+function launcher_onetv_androidtv() {
+  wait_emulator_to_be_ready
+  adb root
+  sleep 1
+  adb remount
+  sleep 1
+  adb push /root/tmp/launcher.apk /system/priv-app
+  sleep 1
+  adb shell mv /system/priv-app/TVLauncher /system
+  sleep 1
+  adb reboot
+  sleep 1
+}
+
 change_language_if_needed
 sleep 1
 enable_proxy_if_needed
 sleep 1
 install_google_play
+sleep 1
+launcher_onetv_androidtv
+

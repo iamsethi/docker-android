@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function wait_emulator_to_be_ready () {
+function wait_emulator_to_be_ready() {
   boot_completed=false
   while [ "$boot_completed" == false ]; do
     status=$(adb wait-for-device shell getprop sys.boot_completed | tr -d '\r')
@@ -10,12 +10,12 @@ function wait_emulator_to_be_ready () {
       boot_completed=true
     else
       sleep 1
-    fi      
+    fi
   done
 }
 
 function change_language_if_needed() {
-  if [ ! -z "${LANGUAGE// }" ] && [ ! -z "${COUNTRY// }" ]; then
+  if [ ! -z "${LANGUAGE// /}" ] && [ ! -z "${COUNTRY// /}" ]; then
     wait_emulator_to_be_ready
     echo "Language will be changed to ${LANGUAGE}-${COUNTRY}"
     adb root && adb shell "setprop persist.sys.language $LANGUAGE; setprop persist.sys.country $COUNTRY; stop; start" && adb unroot
@@ -23,7 +23,7 @@ function change_language_if_needed() {
   fi
 }
 
-function install_google_play () {
+function install_google_play() {
   wait_emulator_to_be_ready
   echo "Google Play Service will be installed"
   adb install -r "/root/google_play_services.apk"
@@ -31,15 +31,15 @@ function install_google_play () {
   adb install -r "/root/google_play_store.apk"
 }
 
-function enable_proxy_if_needed () {
+function enable_proxy_if_needed() {
   if [ "$ENABLE_PROXY_ON_EMULATOR" = true ]; then
-    if [ ! -z "${HTTP_PROXY// }" ]; then
+    if [ ! -z "${HTTP_PROXY// /}" ]; then
       if [[ $HTTP_PROXY == *"http"* ]]; then
         protocol="$(echo $HTTP_PROXY | grep :// | sed -e's,^\(.*://\).*,\1,g')"
         proxy="$(echo ${HTTP_PROXY/$protocol/})"
         echo "[EMULATOR] - Proxy: $proxy"
 
-        IFS=':' read -r -a p <<< "$proxy"
+        IFS=':' read -r -a p <<<"$proxy"
 
         echo "[EMULATOR] - Proxy-IP: ${p[0]}"
         echo "[EMULATOR] - Proxy-Port: ${p[1]}"
@@ -68,7 +68,6 @@ function enable_proxy_if_needed () {
   fi
 }
 
-
 function launcher_onetv_androidtv() {
   wait_emulator_to_be_ready
   adb root
@@ -80,14 +79,15 @@ function launcher_onetv_androidtv() {
   adb shell mv /system/priv-app/TVLauncher /system
   sleep 1
   adb reboot
+  wait_emulator_to_be_ready
   sleep 1
+  adb shell pm grant com.telekom.onetv.hu.staging android.permission.READ_TV_LISTINGS
 }
 
 change_language_if_needed
 sleep 1
 enable_proxy_if_needed
 sleep 1
-install_google_play
+#install_google_play
 sleep 1
 launcher_onetv_androidtv
-

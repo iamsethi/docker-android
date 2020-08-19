@@ -70,14 +70,15 @@ function enable_proxy_if_needed() {
 
 function launcher_onetv_androidtv() {
   wait_emulator_to_be_ready
+  sleep 3
   adb root
-  sleep 1
+  sleep 6
   adb remount
-  sleep 1
+  sleep 6
   adb push /root/tmp/launcher.apk /system/priv-app
-  sleep 1
+  sleep 3
   adb shell mv /system/priv-app/TVLauncher /system
-  sleep 1
+  sleep 3
   adb reboot
   wait_emulator_to_be_ready
   sleep 1

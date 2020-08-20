@@ -21,7 +21,27 @@ services:
 #   ADB connection port
   # Onetv-Androidtv Docker-Android for Launcher application testing
   androidtv_emulator_1080p:
-    image: iamsethi/onetv-androidtv-docker-android
+    image: onetv-androidtv-docker-android
+    privileged: true
+    # Increase scale number if needed
+    # scale: 1
+    depends_on:
+      - selenium_hub
+    ports:
+      - 6080
+    # Change path of apk that you want to test. I use sample_apk that I provide in folder "example"
+    volumes:
+      - $PWD/images/launcher.apk:/root/tmp/launcher.apk
+      - ./video-androidtv:/tmp/video
+    environment:
+      - DEVICE=TV 1080p
+      - CONNECT_TO_GRID=true
+      - APPIUM=true
+      - SELENIUM_HOST=selenium_hub
+      - AUTO_RECORD=false
+
+  androidtv_emulator_1080p_1:
+    image: onetv-androidtv-docker-android
     privileged: true
     # Increase scale number if needed
     # scale: 1

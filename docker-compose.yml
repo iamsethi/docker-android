@@ -24,7 +24,7 @@ services:
     image: iamsethi/onetv-androidtv-docker-android
     privileged: true
     # Increase scale number if needed
-    scale: 1
+    # scale: 1
     depends_on:
       - selenium_hub
     ports:
